@@ -93,6 +93,8 @@ h1 {
   position: relative;
   overflow: hidden;
   z-index: 1;
+  cursor: pointer;
+  user-select: none;
 }
 
 .player-section:hover {
@@ -129,12 +131,13 @@ h2 {
 
 .player-tag {
   font-family: "Orbitron", sans-serif;
-  font-size: 1.2rem;
-  color: rgba(255, 255, 255, 0.8);
-  background: rgba(255, 255, 255, 0.15);
-  padding: 0.5rem 1.5rem;
-  border-radius: 25px;
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.5);
   letter-spacing: 3px;
+  font-weight: 400;
+  background: none;
+  padding: 0;
+  border-radius: 0;
 }
 
 .vs-badge {
@@ -378,8 +381,8 @@ button:active {
   }
 
   .player-tag {
-    font-size: 1rem;
-    padding: 0.4rem 1.2rem;
+    font-size: 0.9rem;
+    letter-spacing: 2px;
   }
 
   button {
@@ -661,7 +664,7 @@ button:active {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -170%);
+  transform: translate(-50%, -150%);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -671,36 +674,70 @@ button:active {
   z-index: 102;
 }
 
-.tie-icon {
-  font-size: 2.5rem;
-  margin-bottom: 0.5rem;
-  filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.5));
-  transform: scale(0);
-  transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
 .tie-text {
   font-size: 1rem;
   letter-spacing: 4px;
   white-space: nowrap;
   transform: translateY(10px);
-  transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  color: rgba(255, 255, 255, 0.9);
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
-  font-weight: 600;
-  background: linear-gradient(135deg, var(--neon-blue), var(--neon-pink));
+  font-weight: 700;
+  position: relative;
+  animation: tieTextFloat 2s ease-in-out infinite;
+  background: linear-gradient(
+    to right,
+    var(--neon-pink),
+    var(--neon-blue),
+    var(--neon-pink)
+  );
+  background-size: 200% auto;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
-.tie-state .tie-indicator {
-  opacity: 1;
+/* Add new animations for tie text */
+@keyframes tieTextFloat {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+    filter: brightness(1);
+  }
+  50% {
+    transform: translateY(-5px) scale(1.05);
+    filter: brightness(1.2);
+  }
 }
 
-.tie-state .tie-icon {
-  transform: scale(1);
-  animation: tieShake 2s infinite;
+.tie-state .tie-text {
+  animation: tieTextFloat 2s ease-in-out infinite,
+    tieTextGradient 8s linear infinite;
+}
+
+@keyframes tieTextGradient {
+  0% {
+    background-position: 0% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+/* Update media queries for tie text */
+@media (max-width: 768px) {
+  .tie-text {
+    font-size: 0.9rem;
+    letter-spacing: 3px;
+  }
+}
+
+@media (max-width: 600px) {
+  .tie-text {
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+  }
+}
+
+.tie-state .tie-indicator {
+  opacity: 1;
 }
 
 .tie-state .tie-text {
@@ -711,20 +748,16 @@ button:active {
 @keyframes tieTextGlow {
   from {
     filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.4))
-           drop-shadow(0 0 4px rgba(255, 255, 255, 0.2));
+      drop-shadow(0 0 4px rgba(255, 255, 255, 0.2));
   }
   to {
     filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.6))
-           drop-shadow(0 0 8px rgba(255, 255, 255, 0.3));
+      drop-shadow(0 0 8px rgba(255, 255, 255, 0.3));
   }
 }
 
 /* Update media queries */
 @media (max-width: 768px) {
-  .tie-icon {
-    font-size: 2.2rem;
-  }
-  
   .tie-text {
     font-size: 0.9rem;
     letter-spacing: 3px;
@@ -732,10 +765,6 @@ button:active {
 }
 
 @media (max-width: 600px) {
-  .tie-icon {
-    font-size: 2rem;
-  }
-  
   .tie-text {
     font-size: 0.8rem;
     letter-spacing: 2px;
@@ -907,4 +936,231 @@ button:active {
       opacity: 0;
     }
   }
+}
+
+/* Remove old button styles and add these new styles */
+.player-section {
+  cursor: pointer;
+  user-select: none;
+}
+
+.player-section::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 65, 108, 0.1) 0%,
+    transparent 50%,
+    rgba(46, 213, 115, 0.1) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.player-section:hover::after {
+  opacity: 1;
+}
+
+/* Update player-specific styles */
+.player1 .indicator {
+  text-shadow: 0 0 20px rgba(255, 94, 223, 0.3);
+}
+
+.player2 .indicator {
+  text-shadow: 0 0 20px rgba(79, 172, 254, 0.3);
+}
+
+/* Update button controls */
+.game-controls {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 3rem;
+    padding-bottom: 1rem;
+}
+
+.icon-btn {
+    width: 45px;
+    height: 45px;
+    padding: 0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.icon-btn .material-symbols-outlined {
+    font-size: 1.6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+.reset-btn {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 65, 108, 0.1);
+    border: 1px solid rgba(255, 65, 108, 0.3);
+}
+
+.reset-btn:hover {
+    background: rgba(255, 65, 108, 0.2);
+    transform: rotate(180deg);
+}
+
+.end-game-btn {
+    width: 55px;
+    height: 55px;
+    background: linear-gradient(135deg, var(--neon-blue), var(--neon-pink));
+    border: none;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+.end-game-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+}
+
+.end-game-btn .material-symbols-outlined {
+    font-size: 2rem;
+    background: linear-gradient(to right, #fff, rgba(255, 255, 255, 0.8));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+/* Update media queries */
+@media (max-width: 768px) {
+    .reset-btn {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .end-game-btn {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .end-game-btn .material-symbols-outlined {
+        font-size: 1.8rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .reset-btn {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .end-game-btn {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .end-game-btn .material-symbols-outlined {
+        font-size: 1.6rem;
+    }
+}
+
+/* Winner screen styles */
+.winner-screen {
+    position: fixed;
+    inset: 0;
+    background: var(--dark-bg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+    z-index: 1000;
+}
+
+.winner-screen.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.winner-name {
+    font-family: 'Russo One', sans-serif;
+    font-size: 8rem;
+    background: linear-gradient(to right, var(--neon-blue), var(--neon-pink));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: all 0.5s ease;
+}
+
+.winner-screen.active .winner-name {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Confetti styles */
+.confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: var(--neon-pink);
+    opacity: 0;
+}
+
+@keyframes confettiFall {
+    0% {
+        transform: translateY(-100vh) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* Media queries */
+@media (max-width: 768px) {
+    .winner-name {
+        font-size: 6rem;
+    }
+    
+    .icon-btn {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .icon-btn .material-symbols-outlined {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .winner-name {
+        font-size: 4rem;
+    }
+    
+    .game-controls {
+        gap: 1rem;
+    }
+    
+    .icon-btn {
+        width: 40px;
+        height: 40px;
+    }
 }

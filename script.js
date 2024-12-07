@@ -56,4 +56,77 @@ function resetScores() {
     document.getElementById('player1-score').textContent = '0';
     document.getElementById('player2-score').textContent = '0';
     updateLeadingState();
+}
+
+// Add this new function to handle card clicks
+function handleCardClick(event, player) {
+    const card = event.currentTarget;
+    const rect = card.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const isRightSide = x > rect.width / 2;
+    
+    updateScore(player, isRightSide ? 1 : -1);
+    
+    // Add click feedback
+    const side = isRightSide ? 'victory' : 'defeat';
+    const indicator = card.querySelector(`.${side}`);
+    indicator.style.transform = 'scale(1.2)';
+    indicator.style.opacity = '1';
+    
+    setTimeout(() => {
+        indicator.style.transform = '';
+        indicator.style.opacity = '';
+    }, 200);
+} 
+
+// Add these functions
+function endGame() {
+    const player1Score = scores.player1;
+    const player2Score = scores.player2;
+    
+    if (player1Score === player2Score) {
+        alert('Game is tied! No winner yet.');
+        return;
+    }
+    
+    const winner = player1Score > player2Score ? 'SAFA' : 'FAIZAL';
+    showWinner(winner);
+}
+
+function showWinner(name) {
+    const winnerScreen = document.querySelector('.winner-screen');
+    const winnerName = document.querySelector('.winner-name');
+    
+    winnerName.textContent = name;
+    winnerScreen.classList.add('active');
+    
+    // Create confetti
+    createConfetti();
+    
+    // Add click to dismiss
+    winnerScreen.onclick = () => {
+        winnerScreen.classList.remove('active');
+        resetScores();
+    };
+}
+
+function createConfetti() {
+    const container = document.querySelector('.confetti-container');
+    const colors = [
+        'var(--neon-pink)',
+        'var(--neon-blue)',
+        '#fff'
+    ];
+    
+    for (let i = 0; i < 100; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.left = Math.random() * 100 + 'vw';
+        confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.animation = `confettiFall ${Math.random() * 3 + 2}s linear forwards`;
+        container.appendChild(confetti);
+        
+        // Remove confetti after animation
+        confetti.onanimationend = () => confetti.remove();
+    }
 } 
